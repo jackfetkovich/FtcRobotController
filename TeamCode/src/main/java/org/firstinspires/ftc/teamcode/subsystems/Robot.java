@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Actions.Actions;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -15,6 +17,7 @@ public class Robot {
     public Turret turret = new Turret();
 
     ArrayList<Subsystem> subsystems = new ArrayList<>();
+    Actions actions = new Actions(subsystems);
 
     public Robot() {
         subsystems.add(driveTrain);
