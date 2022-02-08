@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -14,6 +15,7 @@ public class Robot {
     public Slides slides = new Slides();
     public DuckWheel duckWheel = new DuckWheel();
     public Claw claw = new Claw();
+    public IMU imu = new IMU();
 
     public Drivetrain getDriveTrain() {
         return driveTrain;
@@ -39,6 +41,10 @@ public class Robot {
         return turret;
     }
 
+    public IMU getImu(){
+        return imu;
+    }
+
     public Turret turret = new Turret();
 
     ArrayList<Subsystem> subsystems = new ArrayList<>();
@@ -50,6 +56,7 @@ public class Robot {
         subsystems.add(duckWheel);
         subsystems.add(claw);
         subsystems.add(turret);
+        subsystems.add(imu);
     }
 
     public void init(HardwareMap hwmap) {

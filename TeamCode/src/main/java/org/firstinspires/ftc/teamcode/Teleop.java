@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import android.transition.Slide;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -14,34 +15,36 @@ import org.firstinspires.ftc.teamcode.values.Constants;
 import org.firstinspires.ftc.teamcode.values.SlideState;
 
 @TeleOp(name="Teleop")
-public class Teleop extends OpMode {
+public class Teleop extends LinearOpMode {
 
     Robot robot = new Robot();
-    Actions r = new Actions(robot);
+    Actions r = new Actions(robot, this);
     TeleDrive teleDrive ;
     int turretPosition = -143;
 
 
     @Override
-    public void init() {
+    public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
         robot.claw.clawServo.setPosition(Constants.clawSqueeze);
         teleDrive = new TeleDrive(gamepad1, gamepad2, r);
-    }
-    @Override
-    public void loop() {
-        teleDrive.driveLoop();
-        actuateTurret();
+        waitForStart();
 
-        robot.slides.update();
-        robot.turret.update();
+        while(opModeIsActive()){
+            teleDrive.driveLoop();
+            actuateTurret();
 
-        telemetry.addData("slide pos", robot.slides.getSubsystemState());
-        telemetry.addData("turret pos", robot.turret.turretMotor.getCurrentPosition());
-        telemetry.addData("reference", robot.turret.getReferencePosition());
-        telemetry.addData("power",robot.slides.power);
-        telemetry.update();
+            robot.slides.update();
+            robot.turret.update();
+
+            telemetry.addData("slide pos", robot.slides.getSubsystemState());
+            telemetry.addData("turret pos", robot.turret.turretMotor.getCurrentPosition());
+            telemetry.addData("reference", robot.turret.getReferencePosition());
+            telemetry.addData("power",robot.slides.power);
+            telemetry.update();
+        }
     }
+
 
     public void actuateTurret() {
 
@@ -53,7 +56,7 @@ public class Teleop extends OpMode {
             turretPosition = -213;
         }
 
-        if (gamepad2.left_stick_button) {
+        if (gamepad1.left_stick_button) {
             double slidePosition = robot.slides.getSubsystemState();
             double percentError = Math.abs((slidePosition - SlideState.LEVEL2) / SlideState.LEVEL2);
             robot.slides.setSlidePositionReference(SlideState.LEVEL2);

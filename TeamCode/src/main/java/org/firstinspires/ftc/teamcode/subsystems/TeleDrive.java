@@ -18,12 +18,16 @@ public class TeleDrive {
     public void driveLoop(){
 
         // DRIVE CONTROLS
-        r.setDrivePower(-gamepad1.right_stick_y, -gamepad1.left_stick_y);
+        r.setDrivePower(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
         // INTAKE CONTROLS
         if (gamepad2.left_bumper || gamepad1.x) {
             r.intakeIn();
         } else if (gamepad2.right_bumper || gamepad2.right_trigger > 0.5) {
+            r.intakeOut();
+        } else if(gamepad1.right_trigger > 0){
+            r.intakeIn();
+        } else if(gamepad1.left_trigger > 0){
             r.intakeOut();
         } else {
             r.intakeStop();
@@ -39,30 +43,27 @@ public class TeleDrive {
         }
 
         // HORIZONTAL SLIDE CONTROLS
-        if (gamepad2.b) {
+        if (gamepad1.x) {
             r.horizontalSlideOut();
-        } else if (gamepad2.x) {
+        } else if (gamepad1.b) {
             r.horizontalSlideIn();
-        } else if (gamepad2.left_trigger > 0.5) {
-            // TODO: Figure out what this does
-//            robot.slides.servoHorizSlide.setPosition(0.5);
         }
 
         // CLAW CONTROLS
-        if (gamepad2.right_trigger > 0.5) {
+        if (gamepad1.right_trigger > 0) {
             r.openClaw();
         } else {
             r.closeClaw();
         }
 
         // SLIDE CONTROLS
-        if (gamepad2.dpad_down) {
+        if (gamepad1.dpad_down) {
             r.slideDown();
-        } else if (gamepad2.dpad_left) {
+        } else if (gamepad1.dpad_left) {
             r.slideLevel1();
-        } else if (gamepad2.dpad_right) {
+        } else if (gamepad1.dpad_right) {
             r.slideLevel2();
-        } else if (gamepad2.dpad_up) {
+        } else if (gamepad1.dpad_up) {
             r.slideLevel3();
         }
 
