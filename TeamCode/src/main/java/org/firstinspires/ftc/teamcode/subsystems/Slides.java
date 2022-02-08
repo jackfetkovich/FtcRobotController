@@ -13,10 +13,10 @@ import org.firstinspires.ftc.teamcode.TuningParams.ControllerCoefficients;
 public class Slides implements Subsystem {
     public Servo servoHorizSlide;
     public DcMotorEx motorVertSlide;
-    public final double slideDown = 50;
-    public final double level1 = 300; //dpad left
-    public final double level2 = 1200; //dpad right
-    public final double level3 = 1900;//dpad up
+    //public final double slideDown = 50;
+//    public final double level1 = 300; //dpad left
+//    public final double level2 = 1200; //dpad right
+//    public final double level3 = 1900;//dpad up
     public double power = 0;
 
     protected double slidePositionReference = 0;

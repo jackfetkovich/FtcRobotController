@@ -14,10 +14,34 @@ public class Robot {
     public Slides slides = new Slides();
     public DuckWheel duckWheel = new DuckWheel();
     public Claw claw = new Claw();
+
+    public Drivetrain getDriveTrain() {
+        return driveTrain;
+    }
+
+    public Intake getIntake() {
+        return intake;
+    }
+
+    public Slides getSlides() {
+        return slides;
+    }
+
+    public DuckWheel getDuckWheel() {
+        return duckWheel;
+    }
+
+    public Claw getClaw() {
+        return claw;
+    }
+
+    public Turret getTurret() {
+        return turret;
+    }
+
     public Turret turret = new Turret();
 
     ArrayList<Subsystem> subsystems = new ArrayList<>();
-    Actions actions = new Actions(subsystems);
 
     public Robot() {
         subsystems.add(driveTrain);

@@ -26,23 +26,6 @@ public class Turret implements Subsystem {
     protected double referencePosition = 0;
 
     BasicPID controller = new BasicPID(ControllerCoefficients.turretCoefficients);
-    //   protected RawValue noFilter;
-    // protected BasicFeedforward feedforward = new BasicFeedforward(controllerCoefficients.turretFFcoefficients);
-    //  protected BasicSystem controlSystem;
-
-
-   /* @RequiresApi(api = Build.VERSION_CODES.N)
-   / public turret() {
-        DoubleSupplier motorPosition = new DoubleSupplier() {
-            @Override
-            public double getAsDouble() {
-                return turretMotor.getCurrentPosition();
-            }
-        };
-        this.noFilter = new RawValue(motorPosition);
-        this.controlSystem = new BasicSystem(noFilter,controller,feedforward);
-    } */
-
 
     @Override
     public void init(HardwareMap hwmap) {

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.transition.Slide;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Robot;
+import org.firstinspires.ftc.teamcode.values.SlideState;
 
 @Autonomous
 public class Auto extends LinearOpMode {
@@ -104,7 +107,7 @@ public class Auto extends LinearOpMode {
     }
 
     public void moveSlidesAndTurretForBeginningOfAuto() {
-        double referenceForSlideFirst = robot.slides.level2;
+        double referenceForSlideFirst = SlideState.LEVEL2;
         boolean isComplete = false;
         robot.slides.servoHorizSlide.setPosition(0.7);
 
@@ -112,8 +115,8 @@ public class Auto extends LinearOpMode {
         while (!isComplete && opModeIsActive()) {
 
             double turretErrorFromZero = percentError(1,robot.turret.getSubsystemState());
-            double slideErrorFromDown = percentError(robot.slides.slideDown, robot.slides.getSubsystemState());
-            double slideErrorFromSecond = percentError(robot.slides.level2, robot.slides.getSubsystemState());
+            double slideErrorFromDown = percentError(SlideState.DOWN, robot.slides.getSubsystemState());
+            double slideErrorFromSecond = percentError(SlideState.LEVEL2, robot.slides.getSubsystemState());
 
             if (Math.abs(-robot.turret.getSubsystemState()) < 25 && slideErrorFromDown < 0.05) isComplete = true;
 
@@ -122,9 +125,9 @@ public class Auto extends LinearOpMode {
             }
 
             if (Math.abs(-robot.turret.getSubsystemState()) > 25)  {
-                robot.slides.setSlidePositionReference(robot.slides.level3);
+                robot.slides.setSlidePositionReference(SlideState.LEVEL3);
             } else {
-                robot.slides.setSlidePositionReference(robot.slides.slideDown);
+                robot.slides.setSlidePositionReference(SlideState.DOWN);
             }
 
             robot.slides.update();
