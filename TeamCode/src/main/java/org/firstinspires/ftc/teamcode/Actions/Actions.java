@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Actions;
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -20,12 +22,12 @@ import java.util.ArrayList;
 
 public class Actions {
 
-
     BasicPID turnController = new BasicPID(ControllerCoefficients.turnCoefficients);
+    private ElapsedTime runtime = new ElapsedTime();
 
     LinearOpMode opMode;
     private Robot r;
-    int turretPosition = Integer.valueOf(Constants.turretPosition);
+    int turretPosition = Constants.turretPosition;
     public Actions(Robot r, LinearOpMode opMode){
         this.r = r;
         this.opMode = opMode;
@@ -47,8 +49,69 @@ public class Actions {
         r.getDriveTrain().tankDrive(left, right);
     }
 
-    public void driveForward(double distance){
+    public void drive(double speed,
+                      double leftInches, double rightInches,
+                      double timeoutS){
+        int newLeftTarget;
+        int newRightTarget;
+        int newLeftTarget2;
+        int newRightTarget2;
+        // Ensure that the opmode is still active
+        if (opMode.opModeIsActive()) {
 
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = r.getDriveTrain().left0.getCurrentPosition() + (int)(leftInches * Constants.COUNTS_PER_INCH);
+            newRightTarget = r.getDriveTrain().right2.getCurrentPosition() + (int)(rightInches * Constants.COUNTS_PER_INCH);
+            newLeftTarget2 = r.getDriveTrain().left1.getCurrentPosition() + (int)(leftInches * Constants.COUNTS_PER_INCH);
+            newRightTarget2 = r.getDriveTrain().right3.getCurrentPosition() + (int)(rightInches * Constants.COUNTS_PER_INCH);
+
+            r.getDriveTrain().left0.setTargetPosition(newLeftTarget);
+            r.getDriveTrain().right2.setTargetPosition(newRightTarget);
+            r.getDriveTrain().left1.setTargetPosition(newLeftTarget2);
+            r.getDriveTrain().right3.setTargetPosition(newRightTarget2);
+
+            // Turn On RUN_TO_POSITION
+            r.getDriveTrain().left0.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            r.getDriveTrain().right2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            r.getDriveTrain().left1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            r.getDriveTrain().right3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            r.getDriveTrain().left0.setPower(Math.abs(speed));
+            r.getDriveTrain().right2.setPower(Math.abs(speed));
+            r.getDriveTrain().left1.setPower(Math.abs(speed));
+            r.getDriveTrain().right3.setPower(Math.abs(speed));
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+            while (opMode.opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (r.getDriveTrain().left0.isBusy() && r.getDriveTrain().right2.isBusy())) {
+
+//                // Display it for the driver.
+//                opMode.telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
+//                opMode.telemetry.addData("Path2",  "Running at %7d :%7d",
+//                        r.getDriveTrain().left0.getCurrentPosition(),
+//                        r.getDriveTrain().right2.getCurrentPosition());
+//                opMode.telemetry.update();
+            }
+            r.getDriveTrain().left0.setPower(Math.abs(0));
+            r.getDriveTrain().right2.setPower(Math.abs(0));
+            r.getDriveTrain().left1.setPower(Math.abs(0));
+            r.getDriveTrain().right3.setPower(Math.abs(0));
+
+            // Turn off RUN_TO_POSITION
+            r.getDriveTrain().left0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            r.getDriveTrain().right2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            r.getDriveTrain().left1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            r.getDriveTrain().right3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //  sleep(250);   // optional pause after each move
+        }
+        runtime.reset();
     }
 
     public void rotate(double degrees){
@@ -70,7 +133,11 @@ public class Actions {
 
     // DuckWheel Actions
     public void duckWheelForward(){
-        r.getDuckWheel().wheelServo.setPower(1);
+        runtime.reset();
+        while(runtime.time() < 5 && opMode.opModeIsActive()) {
+            r.getDuckWheel().wheelServo.setPower(1);
+        }
+
     }
     public void duckWheelBackward(){
         r.getDuckWheel().wheelServo.setPower(-1);
@@ -102,22 +169,22 @@ public class Actions {
     }
     public void slideDown(){
         r.getSlides().setSlidePositionReference(SlideState.DOWN);
-
     }
     public void slideLevel1(){
         r.getSlides().setSlidePositionReference(SlideState.LEVEL1);
-
+        opMode.telemetry.addData("Reference:" , r.getSlides().getSlidePositionReference());
+        opMode.telemetry.addData("Current: ", r.getSlides().motorVertSlide.getCurrentPosition());
+        opMode.telemetry.addData("Calculated Power: ", r.getSlides().publishPower());
+        opMode.telemetry.update();
     }
     public void slideLevel2(){
         r.getSlides().setSlidePositionReference(SlideState.LEVEL2);
-
     }
     public void slideLevel3(){
         r.getSlides().setSlidePositionReference(SlideState.LEVEL3);
-
     }
 
-    private void updateSlides(){
+    public void updateSlides(){
         r.getSlides().update();
     }
 

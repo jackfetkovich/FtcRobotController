@@ -62,4 +62,8 @@ public class Slides implements Subsystem {
     public void adjustSlideReference(double adjustment) {
         this.slidePositionReference += adjustment;
     }
+
+    public double publishPower(){
+        return this.power;
+    }
 }
