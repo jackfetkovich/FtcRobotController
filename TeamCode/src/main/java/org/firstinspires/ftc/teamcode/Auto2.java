@@ -22,7 +22,7 @@ public class Auto2 extends LinearOpMode {
         r.resetSlidesAndTurret();
         //r.updateSlides();
 
-        r.drive(0.5, 30, 30, 2);
+        r.drive(0.5, 4, 4, 2);
 
         r.doDuck();
 //        r.slideLevel1();

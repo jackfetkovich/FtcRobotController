@@ -15,7 +15,7 @@ public class Slides implements Subsystem {
     public DcMotorEx motorVertSlide;
     //public final double slideDown = 50;
 //    public final double level1 = 300; //dpad left
-//    public final double level2 = 1200; //dpad right
+//    public final do uble level2 = 1200; //dpad right
 //    public final double level3 = 1900;//dpad up
     public double power = 0;
 
