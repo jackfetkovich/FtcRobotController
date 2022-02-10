@@ -185,8 +185,66 @@ public class Actions {
     }
 
     public void updateSlides(){
+
         r.getSlides().update();
     }
+
+    public enum duckDeliverStates {
+        RAISE_SLIDES,
+        EXTEND,
+        DELIVER,
+        RETRACT
+    }
+
+    public void doDuck() {
+
+        duckDeliverStates state = duckDeliverStates.RAISE_SLIDES;
+
+        ElapsedTime timer = new ElapsedTime();
+
+
+        boolean isDuckDelivered = false;
+        while (!isDuckDelivered && opMode.opModeIsActive()) {
+            updateSlides();
+
+            r.turret.update();
+
+            if (state.equals(duckDeliverStates.RAISE_SLIDES)) {
+                slideLevel2();
+                if (r.getSlides().getError() < 20) {
+                    state = duckDeliverStates.EXTEND;
+                    timer.reset();
+                }
+            } else if (state.equals(duckDeliverStates.EXTEND)) {
+                horizontalSlideIn();
+                if (timer.seconds() > 2) {
+                    state = duckDeliverStates.DELIVER;
+                    timer.reset();
+                }
+            } else if (state.equals(duckDeliverStates.DELIVER)) {
+                duckWheelForward();
+                if (timer.seconds() > 4) {
+                    state = duckDeliverStates.RETRACT;
+                    timer.reset();
+                   // horizontalSlideOut();
+                    duckWheelStop();
+                }
+            } else {
+                if (timer.seconds() > 2) {
+                    slideDown();
+                }
+                if (timer.seconds() > 3 && r.getSlides().getError() < 20) {
+                    isDuckDelivered = true;
+                }
+            }
+
+
+
+
+
+        }
+    }
+
 
     public void resetSlidesAndTurret() {
         double referenceForSlideFirst = SlideState.LEVEL2;

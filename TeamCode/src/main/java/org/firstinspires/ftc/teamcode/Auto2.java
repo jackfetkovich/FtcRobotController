@@ -20,16 +20,20 @@ public class Auto2 extends LinearOpMode {
         r = new Actions(robot, this);
         waitForStart();
         r.resetSlidesAndTurret();
-        r.updateSlides();
+        //r.updateSlides();
 
         r.drive(0.5, 30, 30, 2);
-        r.slideLevel1();
-        r.updateSlides();
-        r.horizontalSlideIn();
-        r.duckWheelForward();
-        r.duckWheelStop();
-        r.slideDown();
-        r.updateSlides();
+
+        r.doDuck();
+//        r.slideLevel1();
+//        r.updateSlides();
+//        r.horizontalSlideIn();
+//        r.duckWheelForward();
+//        r.duckWheelStop();
+//        r.slideDown();
+//        r.updateSlides();
+
+
         r.drive(0.5, -30, -30, 2);
     }
 }

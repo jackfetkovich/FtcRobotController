@@ -66,4 +66,9 @@ public class Slides implements Subsystem {
     public double publishPower(){
         return this.power;
     }
+
+
+    public double getError() {
+        return slidePositionReference -  motorVertSlide.getCurrentPosition();
+    }
 }
