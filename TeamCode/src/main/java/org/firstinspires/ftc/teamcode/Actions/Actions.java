@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Actions;
 
+import android.transition.Slide;
+
 import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -153,6 +155,9 @@ public class Actions {
     public void horizontalSlideIn(){
         r.getSlides().servoHorizSlide.setPosition(0.5);
     }
+    public void horizontalSlideInMore() {
+        r.getSlides().servoHorizSlide.setPosition(0.45);
+    }
 
     // Claw Actions
     public void openClaw(){
@@ -183,7 +188,9 @@ public class Actions {
     public void slideLevel3(){
         r.getSlides().setSlidePositionReference(SlideState.LEVEL3);
     }
-
+    public void slideLevelDuck() {
+        r.getSlides().setSlidePositionReference(SlideState.LEVEL_DUCK);
+    }
     public void updateSlides(){
 
         r.getSlides().update();
@@ -210,13 +217,13 @@ public class Actions {
             r.turret.update();
 
             if (state.equals(duckDeliverStates.RAISE_SLIDES)) {
-                slideLevel2();
+                slideLevelDuck();
                 if (r.getSlides().getError() < 20) {
                     state = duckDeliverStates.EXTEND;
                     timer.reset();
                 }
             } else if (state.equals(duckDeliverStates.EXTEND)) {
-                horizontalSlideIn();
+                horizontalSlideInMore();
                 if (timer.seconds() > 2) {
                     state = duckDeliverStates.DELIVER;
                     timer.reset();
@@ -260,6 +267,7 @@ public class Actions {
             if (Math.abs(-r.turret.getSubsystemState()) < 25 && slideErrorFromDown < 0.05) isComplete = true;
 
             if (slideErrorFromSecond < 0.05) {
+                horizontalSlideIn();
                 r.turret.setReferencePosition(0);
             }
 
