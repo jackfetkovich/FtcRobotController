@@ -34,6 +34,6 @@ public class Auto2 extends LinearOpMode {
 //        r.updateSlides();
 
 
-        r.drive(0.5, -30, -30, 2);
+        r.drive(0.8, -100, -100, 2);
     }
 }
