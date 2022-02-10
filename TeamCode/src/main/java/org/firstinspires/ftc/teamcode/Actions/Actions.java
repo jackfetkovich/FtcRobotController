@@ -233,8 +233,10 @@ public class Actions {
                 if (timer.seconds() > 4) {
                     state = duckDeliverStates.RETRACT;
                     timer.reset();
-                   // horizontalSlideOut();
                     duckWheelStop();
+
+                    this.drive(0.5, -5, -5, 2);
+                    // horizontalSlideOut();
                 }
             } else {
                 if (timer.seconds() > 2) {
